@@ -7,16 +7,17 @@ using System.Web;
 namespace WebApplication4.Models
 {
     public class Account
-    {
-        [DataType(DataType.EmailAddress)]
+    {   
+        public int ID { set; get; }
         public string Email { set; get; }
-        [DataType(DataType.Password)]
+        
         public string Password { set; get; }
         public string FirstName { set; get; }
         public string LastName { set; get; }
-        [DataType(DataType.PhoneNumber)]
+       
         public string PhoneNumber { set; get; }
-
+        public bool IsEmailConfirmed { set; get; }
+        public string accType { set; get; }
        
         
     }
