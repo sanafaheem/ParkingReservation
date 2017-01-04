@@ -1,0 +1,108 @@
+﻿
+@model WebApplication4.Models.ShowParking
+   @using WebApplication4.Models;
+
+  <div class="row well">
+        @using (Html.BeginForm("Show", "Parking", FormMethod.Post, new { @class = "form-inline", role = "form" }))
+        {
+            
+
+            <fieldset>
+                <legend>Find Parking</legend>
+                @{ if (!String.IsNullOrEmpty(ViewBag.errorMessage))
+                    {
+                        <div class="text-danger">
+                            @ViewBag.errorMessage
+                        </div>
+                    }
+                }
+                <div class="form-group">
+                    @Html.LabelFor(m => m.DateIn, new { @class = "control-label" })
+                    <div class="input-group" id="datetimepicker">
+                        @Html.EditorFor(m => m.DateIn, new { @class = "from-control" })
+                        
+                        @Html.ValidationMessageFor(m => m.DateIn)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.TimeIn, new { @class = "control-label" })
+                    <div class="input-group" id="datatimepicker">
+                        @Html.EditorFor(m => m.TimeIn, new { @class = "from-control" })
+                        @Html.ValidationMessageFor(m => m.TimeIn)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.DateOut, new { @class = "control-label" })
+                    <div class="input-group" id="datetimepicker">
+                        @Html.EditorFor(m => m.DateOut, new { @class = "from-control" })
+                        
+                        @Html.ValidationMessageFor(m => m.DateOut)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.TimeOut, new { @class = "control-label" })
+                    <div class="input-group" id="datetimepicker">
+                        @Html.EditorFor(m => m.TimeOut, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.TimeOut)
+                    </div>
+                </div>
+               <div class="form-group">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Building
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownmenu1">
+                       
+                        @foreach (var li in Model.buildings)
+                        {
+                            
+                                <li><a href="@Url.Action("ParkingController","LevelAction",new {id=li.level})">@li.building</a></li>
+                            
+                        }
+                    </ul>
+                </div>
+                   </div>
+                <div class="form-group">
+                    @Html.DropDownListFor(m => m.SelectedItem, new SelectList(Model.buildings),"Level")
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-10">
+                            <button type="submit" class="btn btn-primary">Find</button>
+                        </div>
+                    </div>
+</fieldset>
+            <script>
+        $(document).ready(function ()
+        {
+            $("#datetimepicker").datetimepicker();
+
+            $("#SelectedItem").change(function () {
+                                
+                $.get('/Home/GetProductsForCategory/' + $(this).val(), function (response) {
+                                        
+                    var products = $.evalJSON(response);
+                     var ddlSelectedProduct = $("#SelectedProduct");
+                                        // clear all previous options
+
+                    $("#SelectedProduct > option").remove();
+
+
+                   // populate the products
+                    for (i = 0; i < products.length; i++) {
+
+                        ddlSelectedProduct.append($("<option />").val(products[i].Value).text(products[i].Text));
+
+                    }
+
+                });
+
+           });
+
+        });
+            </script>
+                    }
+    </div>

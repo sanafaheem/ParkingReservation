@@ -41,5 +41,72 @@ namespace WebApplication4.Models
 
             return AffectedRows; 
         }
+        public List<BuildingLevel> getBuilding(string conStr)
+        {
+            List<BuildingLevel> buildingList=new  List<BuildingLevel>();
+            //List<string> li = new List<string>();
+            SqlConnection conn = new SqlConnection(conStr);
+            try
+            {
+                using (conn) {
+                    conn.Open();
+                    string queryStr = "Select Distinct BuildingNumber From dbo.Parking";
+                    SqlCommand comm = new SqlCommand(queryStr,conn);
+                    using (SqlDataReader reader=comm.ExecuteReader())
+                    {
+                        while(reader.Read())
+                        {
+                            int b = reader.GetInt32(reader.GetOrdinal("BuildingNumber"));
+                            List<string> levelList = getlevelList(conStr,b);
+                            BuildingLevel bl = new BuildingLevel();
+                            bl.building = b.ToString(); ;
+                            bl.level=new List<string>(levelList);
+                            buildingList.Add(bl);
+                            // li.Add(building);
+                        }
+
+                    }
+
+
+                }
+                conn.Close();
+            }
+
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+
+
+            return buildingList;
+        }
+
+
+
+        public List<string> getlevelList(string conStr,int building)
+        {
+            List<string> levelList = new List<string>();
+            SqlConnection conn = new SqlConnection(conStr);
+            using (conn)
+            {
+                conn.Open();
+                string queryStr="Select Distinct ParkingLevel From Parking Where BuildingNumber=@BuildingNumber";
+                SqlCommand com = new SqlCommand(queryStr,conn);
+                com.Parameters.AddWithValue("@BuildingNumber", building);
+                using (SqlDataReader reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        levelList.Add(reader.GetInt32(reader.GetOrdinal("ParkingLevel")).ToString());
+                    }
+                }
+               
+            }
+
+
+                return levelList;
+        }
+
     }
 }

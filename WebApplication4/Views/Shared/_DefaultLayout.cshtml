@@ -62,7 +62,7 @@
                 </div>
             <div class="collapse navbar-collapse" id="#navbar-collapse1">
                 <ul class="nav nav-tabs">
-                    <li><a class="active" href="#">Find Parking</a></li>
+                    <li><a class="active" href="@Url.Action("Show","Parking")">Find Parking</a></li>
                     <li><a href="#">Reserve</a></li>
                     @if(ViewContext.HttpContext.User.IsInRole("admin"))
                     {

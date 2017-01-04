@@ -43,7 +43,7 @@ namespace WebApplication4.Controllers
                 }
                 catch(Exception ex)
                 {
-                    ViewBag.errorMessage = "could not add pparking in the system due to" + ex.Message+" Try Again!";
+                    ViewBag.errorMessage = "could not add parking in the system due to" + ex.Message+" Try Again!";
                     return Create();
                 }
             }
@@ -53,14 +53,29 @@ namespace WebApplication4.Controllers
         }
 
         // GET: Parking/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Show()
         {
-            return View();
+            List<BuildingLevel> li = null;
+            connStr = ConfigurationManager.ConnectionStrings["ParkingManagementConnection"].ConnectionString;
+
+            try
+            {
+                ParkingManagement pm = new ParkingManagement();
+                li = pm.getBuilding(connStr);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.errorMesage = "could't get building number" + (ex.Message);
+            }
+            ShowParking showP = new ShowParking();
+            showP.buildings=new List<BuildingLevel>(li);
+
+            return View("ShowParkings",showP);
         }
 
         // POST: Parking/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult show( FormCollection collection)
         {
             try
             {
@@ -73,7 +88,15 @@ namespace WebApplication4.Controllers
                 return View();
             }
         }
+        public ActionResult LevelAction(List<BuildingLevel> li)
+        {
+            ShowParking sp = new ShowParking();
+            sp.buildings = li;
+            string url = this.Request.UrlReferrer.AbsolutePath;
 
+            return RedirectToAction(url,sp);
+        }
+       
         // GET: Parking/Delete/5
         public ActionResult Delete(int id)
         {
