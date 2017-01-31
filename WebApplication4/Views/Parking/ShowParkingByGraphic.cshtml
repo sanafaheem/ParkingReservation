@@ -1,0 +1,117 @@
+﻿@model WebApplication4.Models.ShowParking
+
+
+
+
+<svg id="svgOne" width="600" height="400">
+
+
+    <line x1="0" y1="163" x2="600" y2="163" style="stroke:rgb(102, 51, 0); stroke-width:6" />
+</svg>
+<p id="test"> value of j </p>
+
+<script>
+    svgns = "http://www.w3.org/2000/svg";
+   
+            for (var y = 0; y <150; y+=100){
+                for (var x = 10; x < 600; x += 50) {
+                    var rect = document.createElementNS(svgns, "rect");
+                    rect.setAttributeNS(null, "x", x);
+                    rect.setAttributeNS(null, "y", y);
+                    rect.setAttributeNS(null, "height", "60");
+                    rect.setAttributeNS(null, "width", "40");
+                    rect.setAttributeNS(null, "fill", "rgb(191, 191, 191)");
+                    document.getElementById('svgOne').appendChild(rect);
+
+                }
+
+            }
+            for (var y = 167; y < 350; y += 100) {
+                for (var x = 10; x < 600; x += 50) {
+                    var rect = document.createElementNS(svgns, "rect");
+                    rect.setAttributeNS(null, "x", x);
+                    rect.setAttributeNS(null, "y", y);
+                    rect.setAttributeNS(null, "height", "60");
+                    rect.setAttributeNS(null, "width", "40");
+                    rect.setAttributeNS(null, "fill", "rgb(191, 191, 191)");
+
+                    document.getElementById('svgOne').appendChild(rect);
+
+
+                }
+
+            }
+            var SVG = document.getElementsByTagName('svg')[0];
+            var children = SVG.childNodes;
+            var ID = 0;
+            [].forEach.call(children, function (child) {
+                if (child.nodeType === 1 && child.tagName == "rect") {
+                    child.setAttribute('id', ID);
+                    ID++;
+
+                }
+            });
+            
+            var parking= @Html.Raw(Json.Encode(Model.ParkingList));
+    //loop to fill First Asiel of parkingLot
+    var asielA=0; 
+        for (var i = 0; i <(ID/2); i++) {
+        //get rectangle of
+            var rect=document.getElementById(i);
+            if(parking.length>i){
+
+                var park=parking[i];
+                if(park.ParkingNumber!=null && park.Asiel=="a"){
+                    asielA+=1;
+                    rect.setAttribute("fill", "green");
+                }
+                else if(park.ParkingNumber==null && park.Asiel=="a"){
+                    asielA+=1;
+                    rect.setAttribute("fill", "red");
+                }
+                else if(park.Asiel=="b"){
+                    rect.setAttribute("fill", "red");
+                }
+
+            }
+            else{
+                rect.setAttribute("fill", "red");
+            }
+        
+                
+                
+    }
+        for (var i = (ID/2); i <ID; i++) {
+            //get rectangle of
+
+            var rect = document.getElementById(i);
+                
+            if(parking.length>asielA){
+           
+                var park=parking[asielA];
+                if( park.ParkingNumber!=null  && park.Asiel=="b")
+                {
+                  
+                    rect.setAttribute("fill", "green");
+                }
+                else if (park.ParkingNumber==null){
+                    rect.setAttribute("fill", "red");
+                }
+                asielA+=1;
+            }
+            else 
+                rect.setAttribute("fill", "red");
+                
+                
+        }
+  
+            
+            
+            
+</script>
+
+
+   
+        
+
+   

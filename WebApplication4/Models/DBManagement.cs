@@ -117,30 +117,33 @@ namespace WebApplication4.Models
                     SqlCommand com = new SqlCommand(queryString, conn);
                     com.Parameters.AddWithValue("@Email", creds.Email);
                     com.Parameters.AddWithValue("@Password", passHash);
-
+                    var dbEmail = "";
+                    var accType = "";
                     // var dbEmail = com.ExecuteScalar();
                     using (SqlDataReader reader = com.ExecuteReader())
                     {
-                        var dbEmail="";
-                        var accType="";
+                        
                       if(reader.Read())
                         {
                             dbEmail= reader.GetString(0);
                              accType= reader.GetString(1);
 
-                            if (dbEmail != null)
-                            {
-                                reader.Close();
-                                acc = getUserInfo(dbEmail + "", conn);
-                                acc.accType = accType;
-                                return acc;
-                            }
+                            
                         }
                         
                     }
+                    conn.Close();
+                    if (dbEmail != null)
+                    {
+                        
 
-                    
-                    
+                        acc = getUserInfo(dbEmail + "",connStr);
+                        acc.accType = accType;
+                        return acc;
+                    }
+
+
+
                 }
             }
             catch (Exception ex)
@@ -152,27 +155,93 @@ namespace WebApplication4.Models
             return acc;
         }
         //get the user information
-        public Account getUserInfo(string dbemail, SqlConnection conn)
+        public Account getUserInfo(string dbemail, string connStr)
         {
             Account acc=new Account();
-            //conn.Open();
-            string queryString = "Select * FROM Customer Where Email=@Email";
-            SqlCommand com = new SqlCommand(queryString, conn);
-            com.Parameters.AddWithValue("@Email", dbemail);
-            using (SqlDataReader reader = com.ExecuteReader())
+            
+            SqlConnection conn = new SqlConnection(connStr);
+            using (conn)
             {
-                if (reader.Read())
+                conn.Open();
+                string queryString = "Select * FROM Customer Where Email=@Email";
+                SqlCommand com = new SqlCommand(queryString, conn);
+                com.Parameters.AddWithValue("@Email", dbemail);
+                using (SqlDataReader reader = com.ExecuteReader())
                 {
-                    acc.FirstName = reader.GetString(0);
-                    acc.PhoneNumber = reader.GetString(1);
-                    acc.Email = reader.GetString(2);
-                    acc.LastName = reader.GetString(3);
-                    return acc;
-                }
+                    if (reader.Read())
+                    {
+                        acc.FirstName = reader.GetString(0);
+                        acc.PhoneNumber = reader.GetString(1);
+                        acc.Email = reader.GetString(2);
+                        acc.LastName = reader.GetString(3);
+                        acc.ID = reader.GetInt32(4);
+                        return acc;
+                    }
 
+                }
             }
 
             return acc;
+        }
+       public CustomerAddress getCustomerAdress(int ID,string conStr)
+        {
+            CustomerAddress custAdr = new CustomerAddress();
+
+            SqlConnection sqlConn = new SqlConnection(conStr);
+            using (sqlConn)
+            {
+                sqlConn.Open();
+                string querryStr = "Select * From CustomerAddress Where CustomerID=@ID";
+                SqlCommand com=new SqlCommand(querryStr,sqlConn);
+                com.Parameters.AddWithValue("@ID",ID);
+                using(SqlDataReader reader = com.ExecuteReader()){
+                    if (reader.Read())
+                    {
+                        
+                        custAdr.HouseNO = reader.GetString(0);
+                        custAdr.Street = reader.GetString(1);
+                        custAdr.City = reader.GetString(2);
+
+                        custAdr.PostalCode =Convert.ToInt32(reader.GetString(4));
+                        custAdr.country = reader.GetString(5);
+                        custAdr.CustomerID = reader.GetInt32(6);
+                    }
+                    sqlConn.Close();
+
+                }
+
+
+            }
+            return custAdr;
+
+
+        }
+        
+        public Vehicle getVehicle(int ID,string ConStr)
+        {
+            Vehicle vehicle = new Vehicle();
+            SqlConnection con = new SqlConnection(ConStr);
+            using (con)
+            {
+                con.Open();
+                string querryStr = "Select * From Vehicle Where CustomerID=@ID";
+                SqlCommand com = new SqlCommand(querryStr,con);
+                com.Parameters.AddWithValue("@ID",ID);
+                using(SqlDataReader reader = com.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        vehicle.VehicleNO = reader.GetString(0);
+                        vehicle.Model = reader.GetString(1);
+                        vehicle.Made = reader.GetString(2);
+                        vehicle.color = reader.GetString(3);
+                        vehicle.CustomerId = reader.GetInt32(4);
+                    }
+                }
+                con.Close();
+
+            }
+            return vehicle;
         }
 
     }

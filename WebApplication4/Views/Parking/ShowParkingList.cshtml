@@ -1,0 +1,70 @@
+﻿@model WebApplication4.Models.ShowParking
+
+<div class="row">
+    
+    <div class="col-md-4">
+@using (Html.BeginForm("ReserveParking", "Parking", FormMethod.Post, new { @class = "form-Horizontal", role = "form" }))
+{
+
+
+       @Html.HiddenFor(m => m.Selectedbuilding, new { @Value = Model.Selectedbuilding })
+
+           @Html.HiddenFor(m => m.Selectedlevel, new { @Value = Model.Selectedlevel })
+           @Html.HiddenFor(m => m.DateIn, new { @Value = Model.DateIn })
+          @Html.HiddenFor(m => m.DateOut, new { @Value = Model.DateOut })
+    @Html.HiddenFor(m => m.TimeIn, new { @Value = Model.TimeIn })
+    @Html.HiddenFor(m => m.TimeOut, new { @Value = Model.TimeOut })
+  
+
+    
+
+    
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Select Parking</div>
+        <div class="panel-body">
+           
+            <ul class="list-group">
+                
+                @foreach (var parkings in Model.ParkingList)
+                {
+                    if (parkings.ParkingNumber != null)
+                    {
+                       
+
+                    <li class="list-group-item">
+                    <table class="table-bordered">
+                        <tr>
+                        <th>Parking Number</th>
+                        <th>Asiel</th>
+                        <th>Price</th>
+                           
+                            </tr>
+                        <tr>
+                            <td>@parkings.ParkingNumber </td>
+                            <td>@parkings.Asiel</td>
+                            <td>@parkings.Price$</td>
+
+                            </tr>
+                        
+                   
+                          
+                        </table>
+                        <div class="form-group">
+                            <button type="submit" name="parkingIdButton" value="@parkings.ParkingNumber">Reserve</button>
+                        </div>
+                        </li>
+                    }
+                }
+             </ul>
+           
+        </div>
+    </div>
+
+}
+        </div>
+    </div>
+    <div class="col-sm-offset-4 col-sm-8">
+    
+        @Html.Partial("ShowParkingByGraphic",Model)
+        </div>

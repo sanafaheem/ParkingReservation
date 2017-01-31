@@ -1,11 +1,13 @@
 ﻿
 @model WebApplication4.Models.ShowParking
-   @using WebApplication4.Models;
+
+   
+
 
   <div class="row well">
-        @using (Html.BeginForm("Show", "Parking", FormMethod.Post, new { @class = "form-inline", role = "form" }))
-        {
-            
+@using (Html.BeginForm("ShowController", "Parking", FormMethod.Post, new { @class = "form-inline", role = "form" }))
+{
+
 
             <fieldset>
                 <legend>Find Parking</legend>
@@ -47,24 +49,14 @@
                     </div>
                 </div>
                <div class="form-group">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Building
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownmenu1">
-                       
-                        @foreach (var li in Model.buildings)
-                        {
-                            
-                                <li><a href="@Url.Action("ParkingController","LevelAction",new {id=li.level})">@li.building</a></li>
-                            
-                        }
-                    </ul>
+                   @Html.LabelFor( m=>m.Selectedbuilding, new { @class = "control-label" })
+                   @Html.DropDownListFor(m => m.Selectedbuilding, new SelectList(Model.Building, "Value", "Text"), "Building")   
+                   @Html.ValidationMessageFor(m => m.Selectedbuilding)               
                 </div>
-                   </div>
                 <div class="form-group">
-                    @Html.DropDownListFor(m => m.SelectedItem, new SelectList(Model.buildings),"Level")
+                    @Html.LabelFor(m => m.Selectedlevel, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.Selectedlevel, new SelectList(Model.Level, "Value","Text"),"Level")
+                    @Html.ValidationMessageFor(m=>m.Selectedlevel)
                     </div>
 
 
@@ -80,29 +72,14 @@
         {
             $("#datetimepicker").datetimepicker();
 
-            $("#SelectedItem").change(function () {
-                                
-                $.get('/Home/GetProductsForCategory/' + $(this).val(), function (response) {
-                                        
-                    var products = $.evalJSON(response);
-                     var ddlSelectedProduct = $("#SelectedProduct");
-                                        // clear all previous options
-
-                    $("#SelectedProduct > option").remove();
-
-
-                   // populate the products
-                    for (i = 0; i < products.length; i++) {
-
-                        ddlSelectedProduct.append($("<option />").val(products[i].Value).text(products[i].Text));
-
-                    }
-
-                });
-
-           });
+           
 
         });
             </script>
                     }
     </div>
+        @if (Model.ParkingList != null)
+        {
+            @Html.Partial("ShowParkingList",Model)
+        }
+

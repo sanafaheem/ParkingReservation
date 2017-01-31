@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Hangfire;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
@@ -21,6 +23,16 @@ namespace WebApplication4.App_Start
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/LogIn")
             });
-        }
+
+            string conSt= ConfigurationManager.ConnectionStrings["ParkingManagementConnection"].ConnectionString;
+
+
+            GlobalConfiguration.Configuration
+                .UseSqlServerStorage(conSt);
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
+        
+    }
     }
 }

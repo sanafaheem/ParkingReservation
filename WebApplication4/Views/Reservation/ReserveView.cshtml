@@ -1,0 +1,94 @@
+﻿@model WebApplication4.Models.Reserve
+
+@if (Model == null)
+{
+    <h3>There is no Parking to Reserve, go to Find Parking and select from the available list <a  class="active" href="@Url.Action("Show", "Parking")">Find Parking</a> </h3>
+}
+else
+{
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+@using (Html.BeginForm("ConfirmReservation", "Reservation"))
+{
+    if (!String.IsNullOrEmpty(ViewBag.errorMessage))
+    {
+        <div class="text-danger">
+            @ViewBag.errorMessage
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+    }
+
+  <fieldset>
+        <legend>You have selected following parking spot</legend>
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.ParkingId, new { @class = "col-sm-4 control-label" })
+                <div class="col-sm-8">
+                    @Html.EditorFor(model => model.ParkingId, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+                </div>
+      <div class="form-group">
+          @Html.LabelFor(model => model.BuildingNumber, new { @class = "col-sm-4 control-label" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.BuildingNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+          </div>
+      </div>
+      <div class="form-group">
+          @Html.LabelFor(model => model.LevelNumber, new { @class = "col-sm-4 control-label" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.LevelNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+          </div>
+      </div>
+      <div class="form-group">
+          @Html.LabelFor(model => model.Asiel, new { @class = "col-sm-4 control-label" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.Asiel, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+          </div>
+      </div>
+     
+      <div class="form-group">
+          @Html.LabelFor(model => model.DateIn, new { @class = "col-sm-4 control-label", placeholder = "Start Date" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.DateIn, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+          </div>
+      </div>
+      <div class="form-group">
+          @Html.LabelFor(model => model.TimeIn, new { @class = "col-sm-4 control-label", placeholder = " Start Time" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.TimeIn, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+          </div>
+      </div>
+      <div class="form-group">
+          @Html.LabelFor(model => model.DateOut, new { @class = "col-sm-4 control-label", placeholder = "End Date" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.DateOut, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+          </div>
+      </div>
+      <div class="form-group">
+          @Html.LabelFor(model => model.TimeOut, new { @class = "col-sm-4 control-label", placeholder = "Time Out" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.TimeOut, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly"} })
+          </div>
+      </div>
+      <div class="form-group">
+          @Html.LabelFor(model => model.amount, new { @class = "col-sm-4 control-label" })
+          <div class="col-sm-8">
+              @Html.EditorFor(model => model.amount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+          </div>
+      </div>
+       <div class="form-group">
+           <div class="col-sm-8 col-sm-offset-4">
+               <h3>To confirm reservation go to check out </h3>
+               <button type="submit" class="btn btn-primary">Check Out</button>
+           </div>
+           </div>
+       
+   </fieldset>
+
+}
+    </div>
+</div>
+}

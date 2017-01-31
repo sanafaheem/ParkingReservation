@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web;
+using System.Threading;
 
 namespace WebApplication4.Controllers
 {
@@ -44,7 +45,7 @@ namespace WebApplication4.Controllers
                           new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
 
                           new Claim(ClaimTypes.Name,acc.FirstName),
-
+                          new Claim (ClaimTypes.Email,acc.Email),
                           // optionally you could add roles if any
                           new Claim(ClaimTypes.Role, acc.accType)
              
@@ -54,14 +55,22 @@ namespace WebApplication4.Controllers
 
                         HttpContext.GetOwinContext().Authentication.SignIn(
                           new AuthenticationProperties { IsPersistent = false }, ident);
+                        var claimsPrincipal = new ClaimsPrincipal(ident);
+                        // Set current principal
+                        Thread.CurrentPrincipal = claimsPrincipal;
                         if (acc.accType == "admin")
                         {
                            
                             return RedirectToAction("index", "home");
                             //return View("AdminView");
                        }
-                        
-                            return View("UserView", acc);
+                        else
+                        {  
+                          
+                            return View("Index", acc);
+
+                        }
+
                     }
 
                 }

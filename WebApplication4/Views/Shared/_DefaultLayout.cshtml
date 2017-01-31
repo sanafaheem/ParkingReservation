@@ -30,9 +30,9 @@
                         {
                             <li><a id="signIn" href="@Url.Action("LogIn", "Account")">Log In</a></li>
                             <li><a id="signup" href="@Url.Action("Create", "Account")">sign Up</a></li>
-                        }else
+                        }else    
                         {
-                            <li>@HttpContext.Current.User.Identity.Name</li>
+                            <li><a href="#"> @HttpContext.Current.User.Identity.Name</a></li>
                             <li><a id="Log Out" href="@Url.Action("LogOut", "Account")">Log Out</a></li>
 
                         }
@@ -63,7 +63,7 @@
             <div class="collapse navbar-collapse" id="#navbar-collapse1">
                 <ul class="nav nav-tabs">
                     <li><a class="active" href="@Url.Action("Show","Parking")">Find Parking</a></li>
-                    <li><a href="#">Reserve</a></li>
+                    <li><a class="active" href="@Url.Action("ReserveView","Reservation")">Reserve</a></li>
                     @if(ViewContext.HttpContext.User.IsInRole("admin"))
                     {
                         <li><a href="@Url.Action("Create","Parking")">Add Parking</a></li>
